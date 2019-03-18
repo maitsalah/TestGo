@@ -9,6 +9,22 @@ import (
 	"path/filepath"
 )
 
+//Append to text file
+func AppendFile(fileName string) {
+	file, err := os.OpenFile("Inventory.txt", os.O_WRONLY|os.O_APPEND, 0644)
+	if err != nil {
+		log.Fatalf("failed opening file: %s", err)
+	}
+	defer file.Close()
+
+	len, err := file.WriteString(fileName)
+	if err != nil {
+		log.Fatalf("failed writing to file: %s", err)
+	}
+	fmt.Printf("\nLength: %d bytes", len)
+	fmt.Printf("\nFile Name: %s", file.Name())
+}
+
 func visit(files *[]string) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -51,6 +67,7 @@ func main() {
 			panic(err)
 		}
 		for _, file := range files {
+			AppendFile(file + "\r")
 			fmt.Println(file)
 		}
 	}
